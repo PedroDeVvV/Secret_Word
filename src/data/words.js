@@ -6,5 +6,5 @@ export const wordsList = {
     programação: ["Linguagem", "Framework", "JavaScript", "React"],
     alimento: ["Arroz", "Feijão", "Carne", "Leite", "Ovo"],
     marcas_de_carro: ["Audi", "Kia", "Pagani", "Ford", "Koegnisseg", "Bugatti"],
-    Exclusivos_Sony: ["God-Of-War", "Horizon-Forbidden-West", "Days-Gone"]
+    Exclusivos_Sony: ["God-Of-War", "Days-Gone", "Astro-Bot"]
   };

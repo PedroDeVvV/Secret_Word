@@ -18,20 +18,22 @@ const stages = [
   { id: 3, name: "end" },
 ];
 
+const guessesQty = 4; //quantidade de chances.
+
 function App() {
   const [gameStage, setGameStage] = useState(stages[0].name);
   const [words] = useState(wordsList);
 
-  const [pickedWord, setPickedWorld] = useState("");
+  const [pickedWord, setPickedWord] = useState("");
   const [pickedCategory, setPictureCategory] = useState("");
   const [letters, setLetters] = useState([]);
 
   const [guessedLetters, setGuessedLetters] = useState([]);
   const [wrongLetters, setWrongLetters] = useState([]);
-  const [guesses, setGuesses] = useState(4);
+  const [guesses, setGuesses] = useState(guessesQty);
   const [score, setScore] = useState(0);
 
-  const pickWordAndCategory = () => {
+  const pickWordAndCategory = useCallback(() => {
     //Essa função vai selecionar uma categoria aleatória
     const categories = Object.keys(words); //no arquivo js, as categorias são as keys
     const category =
@@ -42,10 +44,12 @@ function App() {
       words[category][Math.floor(Math.random() * words[category].length)];
 
     return { word, category };
-  };
+  }, [words]);
 
   //Função para mudar a tela para start
-  const startGame = () => {
+  const startGame = useCallback(() => {
+    //Limpando todas as letras
+    clearLetterStates();
     //pick word and pick category
     const { category, word } = pickWordAndCategory(); // quando o jogo é iniciado, as palavras retornadas da função pickwordandcategory são requisitadas
 
@@ -53,13 +57,12 @@ function App() {
     let wordLetters = word.split(""); //separando
     wordLetters = wordLetters.map((l) => l.toLowerCase()); //tranformando todas em minusculas
 
-    //fill state
-    setPickedWorld(word);
+    //Atualizando o estado dos componentes e mudando a etapa do jogo
+    setPickedWord(word);
     setPictureCategory(category);
     setLetters(wordLetters);
-
     setGameStage(stages[1].name);
-  };
+  }, [pickWordAndCategory]);
 
   //Processando a letra do input
   const verifyLetter = (letter) => {
@@ -83,11 +86,43 @@ function App() {
         ...actualWrongLetters,
         normalizedLetter,
       ]);
+
+      setGuesses((actualGuesses) => actualGuesses - 1); //A cada vez que passa por aqui, uma chance é esgotada
     }
   };
 
+  const clearLetterStates = () => {
+    // resetando todos os estados
+    setGuessedLetters([]);
+    setWrongLetters([]);
+  };
+
+  useEffect(() => {
+    //useEffect está monitorando o estado das chances
+    if (guesses <= 0) {
+      clearLetterStates();
+
+      setGameStage(stages[2].name);
+    }
+  }, [guesses]);
+
+  //Em caso de vitória
+  useEffect(() => {
+    const uniqueLetters = [...new Set(letters)];
+    //Win condition
+    if (guessedLetters.length === uniqueLetters.length) {
+      setScore((actualScore) => (actualScore += 100));
+
+      //começar um novo game
+      startGame();
+    }
+  }, [guessedLetters, letters, startGame]);
+
   //Recomeçar o jogo
   const retry = () => {
+    setScore(0);
+    setGuesses(3);
+
     setGameStage(stages[0].name);
   };
 
@@ -107,7 +142,7 @@ function App() {
           score={score}
         />
       )}
-      {gameStage === "end" && <End retry={retry} />}
+      {gameStage === "end" && <End retry={retry} score={score} />}
     </div>
   );
 }
