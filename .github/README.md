@@ -9,7 +9,7 @@ O jogo conta com algumas categorias de palavras, como fruta, parte do corpo, mar
 <h2>⚙️Prévia de funcionamento</h2>
 
 ![preview](./img.gif)<br>
-🔗[Clique aqui para jogar!](https://pedrodevvv.github.io/alpha-host/)
+🔗[Clique aqui para jogar!](https://secret-word-gray-nine.vercel.app/)
 
 ## 👨🏻‍💻Descrição do código
 - Detalhamento código do componente principal do projeto, para facilitar o entendimento do código, segue a descrição.
