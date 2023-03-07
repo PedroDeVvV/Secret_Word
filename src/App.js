@@ -108,7 +108,7 @@ function App() {
 
   //Em caso de vitória
   useEffect(() => {
-    const uniqueLetters = [...new Set(letters)];
+    const uniqueLetters = [...new Set(letters)]; //set cria um array somente com itens únicos
     //Win condition
     if (guessedLetters.length === uniqueLetters.length) {
       setScore((actualScore) => (actualScore += 100));
@@ -121,7 +121,7 @@ function App() {
   //Recomeçar o jogo
   const retry = () => {
     setScore(0);
-    setGuesses(3);
+    setGuesses(4);
 
     setGameStage(stages[0].name);
   };
